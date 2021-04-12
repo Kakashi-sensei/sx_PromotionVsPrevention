@@ -5,7 +5,11 @@ date: "4/12/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# The first part is for comparing promotion and prevention in each group
+
+```{r}
+# 0.1 is for promotion values in group 0; 0.2 is for prevention values in group 0
+
+
 ```
 
