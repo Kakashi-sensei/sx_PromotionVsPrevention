@@ -4,12 +4,55 @@ author: "Tianqi(Tim)"
 date: "4/12/2021"
 output: html_document
 ---
-
-# The first part is for comparing promotion and prevention in each group
+# Randomization Test use
 
 ```{r}
-# 0.1 is for promotion values in group 0; 0.2 is for prevention values in group 0
+# Randomization test model
+randomsamples <-function(y, trt, nsims=500){
+  n <- tapply(y, trt, length)
+  y_sims<-NULL
+  for(i in 1:nsims){
+    n_new <- sample(1:length(y), n[1])
+    y_sims <- rbind(y_sims, c(mean(y[n_new]), mean(y[!(1:length(y)) %in% n_new])))
+  }
+  y_sims<-as.data.frame(y_sims)
+  names(y_sims)<-names(n)
+  return(y_sims)
+}
+# The first part is for comparing promotion and prevention in each group
+## in the group, 0.1 is for promotion values in group 0; 0.2 is for prevention values in group 0
+propre0 <- read.csv("https://raw.githubusercontent.com/Kakashi-sensei/sx_PromotionVsPrevention/main/propre0.csv?token=ANA4JWJOEH4IRNHFYHRT7GTAOPTXG", header=TRUE)
+samples <- randomsamples(propre0$value, propre0$group, nsims = 500)
+diff_random <- samples$'0.2'-samples$'0.1'
+m <- sum(diff_random >= 0.713046874999999)
+n <- length(diff_random)
+(m+1)/(n+1)
+# p=0.001996008
+t.test (value~group, alternative = 'less', data=propre0)
+# t-test check
+rm(list=ls())
 
 
+# comparing promotion and prevention in group 1
+propre1 <- read.csv("https://raw.githubusercontent.com/Kakashi-sensei/sx_PromotionVsPrevention/main/propre1.csv", header=TRUE)
+t.test (values~group, alternative = 'less', data=propre1)
+# t-test check p-value = 5.444e-11 t = -6.602, df = 474.41
+
+# part2 
+pre01 <- read.csv("https://raw.githubusercontent.com/Kakashi-sensei/sx_PromotionVsPrevention/main/pre01.csv", header=TRUE)
+t.test (Prevention~condition, alternative = 'greater', data=pre01)
+# t-test check p-value = 0.0002363, t = 3.5194, df = 493.43
+
+# for pro 0 vs 1
+pro01 <- read.csv("https://raw.githubusercontent.com/Kakashi-sensei/sx_PromotionVsPrevention/main/pro01.csv", header=TRUE)
+t.test (Promotion~condition, alternative = 'less', data=pro01)
+# t-test check p-value = 0.002887
+
+samples <- randomsamples(pro01$Promotion, pro01$condition, nsims = 500)
+diff_random <- samples$'1'-samples$'0'
+m <- sum(diff_random >= 0.168778521825393)
+n <- length(diff_random)
+(m+1)/(n+1)
+# p=0.003992016
 ```
 
