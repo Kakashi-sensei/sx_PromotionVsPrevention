@@ -18,7 +18,6 @@ mean in group 0.1 mean in group 0.2
 ### H1: Values in prevention are greater than promotion
 t-test report
 Welch Two Sample t-test
-
 data:  values by group
 t = -6.602, df = 474.41, p-value = 5.444e-11
 alternative hypothesis: true difference in means is less than 0
